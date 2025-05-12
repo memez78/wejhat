@@ -1,0 +1,709 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#6366f1">
+    <meta name="description" content="Wejhati - Your next adventure awaits with our surprise travel planner app">
+    <title>Wejhati - Your Next Adventure</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="manifest" href="manifest.json">
+    <link rel="icon" href="icons/icon-192x192.svg" type="image/svg+xml">
+    <link rel="apple-touch-icon" href="icons/icon-192x192.png">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="app-container">
+        <!-- Welcome Page -->
+        <div id="welcomePage" class="welcome-page active">
+            <img src="logo.jpeg" alt="Wejhati Logo" class="logo" width="180" height="180">
+            <h1 class="welcome-title">وجهتي Wejhati</h1>
+            <p class="welcome-subtitle">Your next adventure awaits</p>
+            
+            <div class="social-links">
+                <a href="https://www.instagram.com/wejhati.app?igsh=dzNsdW9yczRuYzR5" target="_blank" class="social-link">
+                    <i data-lucide="instagram" class="social-icon"></i>
+                    Follow us on Instagram
+                </a>
+            </div>
+            <div class="feature-list">
+                <div class="feature-item">
+                    <i data-lucide="map-pin" class="feature-icon"></i>
+                    <span>Discover your perfect travel destination</span>
+                </div>
+                <div class="feature-item">
+                    <i data-lucide="sparkles" class="feature-icon"></i>
+                    <span>Surprise destinations for adventurous travelers</span>
+                </div>
+                <div class="feature-item">
+                    <i data-lucide="calendar" class="feature-icon"></i>
+                    <span>Plan and track your upcoming trips</span>
+                </div>
+                <div class="feature-item">
+                    <i data-lucide="bell" class="feature-icon"></i>
+                    <span>Get countdown notifications for your trips</span>
+                </div>
+            </div>
+            
+            <button id="getStartedBtn" class="btn btn-outline">
+                <i data-lucide="arrow-right" class="btn-icon"></i>
+                <span>Get Started</span>
+            </button>
+        </div>
+        
+        <!-- Auth Container -->
+        <div id="authContainer" class="auth-container" style="display: none;">
+            <!-- Login Form -->
+            <div id="loginForm" class="auth-form-container">
+                <div class="auth-header">
+                    <h1 class="auth-title">Welcome Back</h1>
+                    <p class="auth-subtitle">Log in to continue your journey</p>
+                </div>
+                
+                <form class="auth-form" id="loginFormEl">
+                    <input type="email" id="loginEmail" placeholder="Email Address" required>
+                    <input type="password" id="loginPassword" placeholder="Password" required>
+                    <button type="submit" class="btn btn-primary">Login</button>
+                </form>
+                <div class="auth-switch" onclick="showSignup()">Don't have an account? Sign Up</div>
+            </div>
+            
+            <!-- Signup Form -->
+            <div id="signupForm" class="auth-form-container" style="display: none;">
+                <div class="auth-header">
+                    <h1 class="auth-title">Create Account</h1>
+                    <p class="auth-subtitle">Join us on your new adventures</p>
+                </div>
+                
+                <form class="auth-form" id="signupFormEl">
+                    <input type="text" id="signupName" placeholder="Full Name" required>
+                    <input type="email" id="signupEmail" placeholder="Email Address" required>
+                    <input type="password" id="signupPassword" placeholder="Password" required>
+                    <input type="password" id="signupConfirm" placeholder="Confirm Password" required>
+                    <button type="submit" class="btn btn-primary">Create Account</button>
+                </form>
+                <div class="auth-switch" onclick="showLogin()">Already have an account? Login</div>
+            </div>
+        </div>
+        
+        <!-- Main Container -->
+        <div id="mainContainer" class="main-container" style="display: none;">
+            <!-- Home Page -->
+            <div id="homePage" class="page active">
+                <div class="hero-section">
+                    <h1 class="hero-title">Welcome, <span id="userGreeting">Traveler</span></h1>
+                    <p class="hero-subtitle">Ready for your next adventure?</p>
+                    <button class="btn btn-outline hero-action" id="createTripButton">
+                        <i data-lucide="plus" class="btn-icon"></i>
+                        <span>Create New Trip</span>
+                    </button>
+                    <i data-lucide="map" class="hero-pattern"></i>
+                </div>
+                
+                <div class="quick-stats">
+                    <div class="stat-card">
+                        <div class="stat-value" id="tripsCount">0</div>
+                        <div class="stat-label">Trips</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-value" id="countriesCount">0</div>
+                        <div class="stat-label">Countries</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-value" id="daysCount">0</div>
+                        <div class="stat-label">Travel Days</div>
+                    </div>
+                </div>
+                
+                <h2 class="section-title">
+                    <i data-lucide="compass" class="section-icon"></i>
+                    <span>Quick Actions</span>
+                </h2>
+                
+                <div class="action-cards">
+                    <div class="action-card" id="viewTripsAction">
+                        <i data-lucide="luggage" class="action-icon"></i>
+                        <div class="action-title">My Trips</div>
+                        <div class="action-description">View and manage your planned trips</div>
+                    </div>
+                    <div class="action-card" id="createTripAction">
+                        <i data-lucide="plus-circle" class="action-icon"></i>
+                        <div class="action-title">New Trip</div>
+                        <div class="action-description">Create a new travel adventure</div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Trips Page -->
+            <div id="tripsPage" class="page">
+                <div class="page-header">
+                    <h1>My Trips</h1>
+                </div>
+                
+                <div id="tripsEmptyState" class="empty-state">
+                    <i data-lucide="map-pin-off" class="empty-icon"></i>
+                    <h2>No trips yet</h2>
+                    <p class="empty-text">Create your first trip to get started on your next adventure!</p>
+                    <button class="btn btn-primary" id="emptyStateCreateTrip">
+                        <i data-lucide="plus" class="btn-icon"></i>
+                        <span>Create Trip</span>
+                    </button>
+                </div>
+                
+                <div id="tripsList" class="trip-list" style="display: none;">
+                    <!-- Will be populated by JavaScript -->
+                </div>
+            </div>
+            
+            <!-- Trip Form Page -->
+            <div id="tripFormPage" class="page">
+                <div class="page-header">
+                    <button class="back-button" data-return="trips">
+                        <i data-lucide="arrow-left" class="back-icon"></i>
+                    </button>
+                    <h1 id="tripFormTitle">Create Your Trip</h1>
+                </div>
+                
+                <div class="form-container">
+                    <div class="header-section">
+                        <div style="display: flex; justify-content: space-between; align-items: start;">
+                            <div>
+                                <h1 style="font-size: 2.25rem; font-weight: bold;">وجهتي Wejhati</h1>
+                                <p style="opacity: 0.9; font-size: 1.125rem;">Your Next Adventure Awaits</p>
+                                <p style="opacity: 0.75; font-size: 0.875rem; margin-top: 0.5rem;">Let us surprise you with the perfect getaway</p>
+                            </div>
+                            <i data-lucide="plane" style="width: 3.5rem; height: 3.5rem; opacity: 0.8;"></i>
+                        </div>
+                        <div class="progress-bar">
+                            <div class="progress-fill" id="progressFill"></div>
+                        </div>
+                    </div>
+
+                    <div id="stepsContainer">
+                        <!-- Step 1: Date Selection -->
+                        <div class="step active" id="step1">
+                            <h2><i data-lucide="calendar" style="width: 1.25rem; height: 1.25rem;"></i> Select Travel Dates</h2>
+                            <div class="date-section">
+                                <div class="date-input">
+                                    <label><i data-lucide="plane-takeoff" style="width: 1rem; height: 1rem;"></i> Start Date</label>
+                                    <input type="date" id="startDate" required>
+                                </div>
+                                <div class="date-input">
+                                    <label><i data-lucide="plane-landing" style="width: 1rem; height: 1rem;"></i> End Date</label>
+                                    <input type="date" id="endDate" required>
+                                </div>
+                            </div>
+                            <div class="date-duration-display" id="durationDisplay">Select dates to see trip duration</div>
+                            <div class="duration-error" id="durationError">Trip duration cannot exceed 365 days</div>
+                        </div>
+
+                        <!-- Step 2: Region Selection -->
+                        <div class="step" id="step2">
+                            <h2><i data-lucide="globe" style="width: 1.25rem; height: 1.25rem;"></i> Select Destination Region</h2>
+                            <div class="options-grid" id="regionOptions">
+                                <div class="option-card" data-value="Europe">
+                                    <div class="option-icon">🏰</div>
+                                    <h3>Europe</h3>
+                                </div>
+                                
+                                <div class="option-card" data-value="Asia">
+                                    <div class="option-icon">🏯</div>
+                                    <h3>Asia</h3>
+                                </div>
+                                
+                                <div class="option-card" data-value="Americas">
+                                    <div class="option-icon">🗽</div>
+                                    <h3>Americas</h3>
+                                </div>
+                                
+                                <div class="option-card" data-value="Africa">
+                                    <div class="option-icon">🦁</div>
+                                    <h3>Africa</h3>
+                                </div>
+                                
+                                <div class="option-card" data-value="Middle East">
+                                    <div class="option-icon">🕌</div>
+                                    <h3>Middle East</h3>
+                                </div>
+                                
+                                <div class="option-card" data-value="Oceania">
+                                    <div class="option-icon">🏝️</div>
+                                    <h3>Oceania</h3>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Step 3: Travel Type -->
+                        <div class="step" id="step3">
+                            <h2><i data-lucide="compass" style="width: 1.25rem; height: 1.25rem;"></i> Select Travel Style</h2>
+                            <p>You can select multiple options that interest you.</p>
+                            <div class="options-grid multi-select" id="travelTypeOptions">
+                                <div class="option-card" data-value="Cultural">
+                                    <div class="option-icon">🏛️</div>
+                                    <h3>Cultural</h3>
+                                </div>
+                                
+                                <div class="option-card" data-value="Adventure">
+                                    <div class="option-icon">🏔️</div>
+                                    <h3>Adventure</h3>
+                                </div>
+                                
+                                <div class="option-card" data-value="Luxury">
+                                    <div class="option-icon">💎</div>
+                                    <h3>Luxury</h3>
+                                </div>
+                                
+                                <div class="option-card" data-value="Culinary">
+                                    <div class="option-icon">🍴</div>
+                                    <h3>Culinary</h3>
+                                </div>
+                                
+                                <div class="option-card" data-value="Spiritual">
+                                    <div class="option-icon">🧘</div>
+                                    <h3>Spiritual</h3>
+                                </div>
+                                
+                                <div class="option-card" data-value="Beach">
+                                    <div class="option-icon">🏖️</div>
+                                    <h3>Beach & Relaxation</h3>
+                                </div>
+                                
+                                <div class="option-card" data-value="Shopping">
+                                    <div class="option-icon">🛍️</div>
+                                    <h3>Shopping</h3>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Step 4: Travel Group -->
+                        <div class="step" id="step4">
+                            <h2><i data-lucide="users" style="width: 1.25rem; height: 1.25rem;"></i> Who's Joining?</h2>
+                            <div class="options-grid" id="travelerTypeOptions">
+                                <div class="option-card" data-value="Solo">
+                                    <div class="option-icon">🧳</div>
+                                    <h3>Solo Travel</h3>
+                                </div>
+                                
+                                <div class="option-card" data-value="Couple">
+                                    <div class="option-icon">👫</div>
+                                    <h3>Romantic Getaway</h3>
+                                </div>
+                                
+                                <div class="option-card" data-value="Family">
+                                    <div class="option-icon">👨‍👩‍👧‍👦</div>
+                                    <h3>Family Trip</h3>
+                                </div>
+                                
+                                <div class="option-card" data-value="Group">
+                                    <div class="option-icon">👥</div>
+                                    <h3>Group Travel</h3>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Step 5: Budget Range -->
+                        <div class="step" id="step5">
+                            <h2><i data-lucide="dollar-sign" style="width: 1.25rem; height: 1.25rem;"></i> Your Budget</h2>
+                            <p>Set your daily budget per person (excluding flights)</p>
+                            
+                            <div class="budget-slider-container">
+                                <div class="budget-slider-wrapper">
+                                    <input type="range" id="budgetSlider" min="50" max="1000" step="50" value="300" class="budget-slider">
+                                </div>
+                                
+                                <div class="budget-display">
+                                    <div class="budget-amount" id="budgetValue">$300 per day</div>
+                                    <div class="budget-category" id="budgetCategory">Moderate</div>
+                                </div>
+                                
+                                <div class="budget-scale">
+                                    <div class="budget-marker" style="left: 0%">$50</div>
+                                    <div class="budget-marker" style="left: 25%">$250</div>
+                                    <div class="budget-marker" style="left: 50%">$500</div>
+                                    <div class="budget-marker" style="left: 75%">$750</div>
+                                    <div class="budget-marker" style="left: 100%">$1000+</div>
+                                </div>
+                                
+                                <div class="budget-categories">
+                                    <div class="budget-category-box budget-economy">
+                                        <div class="budget-category-label">Budget</div>
+                                        <div class="budget-category-range">$50-$200</div>
+                                    </div>
+                                    <div class="budget-category-box budget-moderate">
+                                        <div class="budget-category-label">Moderate</div>
+                                        <div class="budget-category-range">$200-$500</div>
+                                    </div>
+                                    <div class="budget-category-box budget-premium">
+                                        <div class="budget-category-label">Premium</div>
+                                        <div class="budget-category-range">$500-$750</div>
+                                    </div>
+                                    <div class="budget-category-box budget-luxury">
+                                        <div class="budget-category-label">Luxury</div>
+                                        <div class="budget-category-range">$750+</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Step 6: Dining Preferences -->
+                        <div class="step" id="step6">
+                            <h2><i data-lucide="utensils" style="width: 1.25rem; height: 1.25rem;"></i> Dining Preferences</h2>
+                            <div class="options-grid" id="diningOptions">
+                                <div class="option-card" data-value="StrictHalal">
+                                    <div class="option-icon">🍽️</div>
+                                    <h3>Certified Halal Only</h3>
+                                </div>
+                                
+                                <div class="option-card" data-value="MixedHalal">
+                                    <div class="option-icon">🥘</div>
+                                    <h3>Halal-Friendly Area</h3>
+                                </div>
+                                
+                                <div class="option-card" data-value="VeganVeg">
+                                    <div class="option-icon">🥗</div>
+                                    <h3>Vegan & Vegetarian</h3>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Step 7: Special Requirements -->
+                        <div class="step" id="step7">
+                            <h2><i data-lucide="check-square" style="width: 1.25rem; height: 1.25rem;"></i> Special Requirements</h2>
+                            <p>Select any special requirements for your trip:</p>
+                            <div class="checkbox-group">
+                                <label class="checkbox-item">
+                                    <input type="checkbox" name="limitations" value="no-flights">
+                                    <div>
+                                        <strong>✈️ No flights</strong>
+                                        <p>Travel by land or sea transportation only</p>
+                                    </div>
+                                </label>
+                                <label class="checkbox-item">
+                                    <input type="checkbox" name="limitations" value="wheelchair">
+                                    <div>
+                                        <strong>♿ Wheelchair accessible</strong>
+                                        <p>Destinations and activities with accessibility options</p>
+                                    </div>
+                                </label>
+                                <label class="checkbox-item">
+                                    <input type="checkbox" name="limitations" value="vegan">
+                                    <div>
+                                        <strong>🥗 Vegan-friendly</strong>
+                                        <p>Destinations with good vegan dining options</p>
+                                    </div>
+                                </label>
+                                <label class="checkbox-item">
+                                    <input type="checkbox" name="limitations" value="english">
+                                    <div>
+                                        <strong>🗣️ English-speaking guides</strong>
+                                        <p>Tours and experiences with English-speaking staff</p>
+                                    </div>
+                                </label>
+                            </div>
+                            <div class="limitations-warning">
+                                <i data-lucide="alert-triangle" style="width: 1.5rem; height: 1.5rem;"></i>
+                                <div>
+                                    <p>Some requirements may limit available destinations.</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Navigation Buttons -->
+                        <div class="nav-buttons">
+                            <button class="btn btn-secondary" id="prevBtn" style="display: none;">
+                                <i data-lucide="arrow-left" style="width: 1rem; height: 1rem;"></i> Previous
+                            </button>
+                            <button class="btn btn-primary" id="nextBtn">
+                                Next <i data-lucide="arrow-right" style="width: 1rem; height: 1rem;"></i>
+                            </button>
+                            <button class="btn btn-primary" id="submitBtn" style="display: none;">
+                                Create Trip <i data-lucide="check" style="width: 1rem; height: 1rem;"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Trip Result Page -->
+            <div id="tripResultPage" class="page">
+                <div class="page-header">
+                    <button class="back-button" data-return="trips">
+                        <i data-lucide="arrow-left" class="back-icon"></i>
+                    </button>
+                    <h1>Trip Details</h1>
+                </div>
+                
+                <div class="result-container">
+                    <img id="resultImage" class="result-image" src="https://images.unsplash.com/photo-1557548274-a82bc3a1bbaf" alt="Trip destination">
+                    
+                    <h2 id="resultTitle" class="result-title">Your Trip</h2>
+                    <div class="result-meta">
+                        <div id="resultDates">May 15 - May 22, 2023</div>
+                        <div>•</div>
+                        <div id="resultRegion">Europe</div>
+                    </div>
+                    
+                    <div id="revealSection" class="reveal-section">
+                        <h3 class="reveal-title">Your destination is a surprise!</h3>
+                        <div id="countdown" class="countdown">3d 12h 45m</div>
+                        <button id="revealButton" class="btn btn-outline">
+                            <i data-lucide="eye" class="btn-icon"></i>
+                            <span>Reveal Now</span>
+                        </button>
+                    </div>
+                    
+                    <div id="destinationInfo" style="display: none;">
+                        <div class="result-section">
+                            <h3 class="result-section-title">
+                                <i data-lucide="info" class="section-icon"></i>
+                                <span>Destination Overview</span>
+                            </h3>
+                            <p id="destinationDescription">Destination description will appear here.</p>
+                        </div>
+                        
+                        <div class="result-section">
+                            <h3 class="result-section-title">
+                                <i data-lucide="clipboard-list" class="section-icon"></i>
+                                <span>Travel Information</span>
+                            </h3>
+                            <div class="info-list">
+                                <div class="info-item">
+                                    <i data-lucide="id-card" class="info-icon"></i>
+                                    <div class="info-content">
+                                        <strong>Visa Requirements</strong>
+                                        <p id="visaInfo">Visa information will appear here.</p>
+                                    </div>
+                                </div>
+                                <div class="info-item">
+                                    <i data-lucide="plane" class="info-icon"></i>
+                                    <div class="info-content">
+                                        <strong>Flight Options</strong>
+                                        <p id="flightInfo">Flight information will appear here.</p>
+                                    </div>
+                                </div>
+                                <div class="info-item">
+                                    <i data-lucide="hotel" class="info-icon"></i>
+                                    <div class="info-content">
+                                        <strong>Accommodation</strong>
+                                        <p id="hotelInfo">Hotel information will appear here.</p>
+                                    </div>
+                                </div>
+                                <div class="info-item">
+                                    <i data-lucide="wallet" class="info-icon"></i>
+                                    <div class="info-content">
+                                        <strong>Budget Estimate</strong>
+                                        <p id="budgetInfo">Budget information will appear here.</p>
+                                    </div>
+                                </div>
+                                <div class="info-item">
+                                    <i data-lucide="lightbulb" class="info-icon"></i>
+                                    <div class="info-content">
+                                        <strong>Travel Tips</strong>
+                                        <p id="tipsInfo">Travel tips will appear here.</p>
+                                    </div>
+                                </div>
+                                <div class="info-item">
+                                    <i data-lucide="phone-call" class="info-icon"></i>
+                                    <div class="info-content">
+                                        <strong>Emergency Contacts</strong>
+                                        <p id="emergencyInfo">Emergency information will appear here.</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="result-section">
+                            <h3 class="result-section-title">
+                                <i data-lucide="map-pin" class="section-icon"></i>
+                                <span>Top Attractions</span>
+                            </h3>
+                            <ul id="attractionsList" class="attraction-list">
+                                <!-- Will be populated by JavaScript -->
+                            </ul>
+                        </div>
+                        
+                        <div class="result-section">
+                            <h3 class="result-section-title">
+                                <i data-lucide="calendar" class="section-icon"></i>
+                                <span>Best Time to Visit</span>
+                            </h3>
+                            <p id="bestTimeInfo">Best time information will appear here.</p>
+                        </div>
+                    </div>
+                    
+                    <div class="form-actions">
+                        <button id="editTripButton" class="btn btn-secondary">
+                            <i data-lucide="edit" class="btn-icon"></i>
+                            <span>Edit Trip</span>
+                        </button>
+                        <button id="deleteTripButton" class="btn btn-secondary">
+                            <i data-lucide="trash-2" class="btn-icon"></i>
+                            <span>Delete Trip</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Profile Page -->
+            <div id="profilePage" class="page">
+                <div class="page-header">
+                    <h1>Profile</h1>
+                </div>
+                
+                <div class="profile-header">
+                    <div class="avatar" id="userAvatar">U</div>
+                    <div class="profile-info">
+                        <h2 id="userName">User Name</h2>
+                        <p id="userEmail">user@example.com</p>
+                    </div>
+                </div>
+                
+                <div class="profile-section">
+                    <h3 class="profile-section-title">
+                        <i data-lucide="settings" class="section-icon"></i>
+                        <span>Settings</span>
+                    </h3>
+                    
+                    <div class="profile-list">
+                        <div class="profile-item" id="editProfileBtn">
+                            <div class="profile-item-left">
+                                <i data-lucide="user" class="profile-item-icon"></i>
+                                <div class="profile-item-content">Edit Profile</div>
+                            </div>
+                            <i data-lucide="chevron-right"></i>
+                        </div>
+                        <div class="profile-item" id="notificationsBtn">
+                            <div class="profile-item-left">
+                                <i data-lucide="bell" class="profile-item-icon"></i>
+                                <div class="profile-item-content">Notifications</div>
+                            </div>
+                            <i data-lucide="chevron-right"></i>
+                        </div>
+                        <div class="profile-item" id="privacyBtn">
+                            <div class="profile-item-left">
+                                <i data-lucide="lock" class="profile-item-icon"></i>
+                                <div class="profile-item-content">Privacy</div>
+                            </div>
+                            <i data-lucide="chevron-right"></i>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="profile-section">
+                    <h3 class="profile-section-title">
+                        <i data-lucide="help-circle" class="section-icon"></i>
+                        <span>Support</span>
+                    </h3>
+                    
+                    <div class="profile-list">
+                        <div class="profile-item accordion-item" id="helpBtn">
+                            <div class="profile-item-left">
+                                <i data-lucide="help-circle" class="profile-item-icon"></i>
+                                <div class="profile-item-content">Help & FAQs</div>
+                            </div>
+                            <i data-lucide="chevron-down"></i>
+                        </div>
+                        <div class="faq-content">
+                            <div class="faq-item">
+                                <h4>How does the surprise destination work?</h4>
+                                <p>We select your destination based on your preferences and reveal it 3 days before the trip, or you can choose to reveal it earlier!</p>
+                            </div>
+                            <div class="faq-item">
+                                <h4>Can I modify my preferences after booking?</h4>
+                                <p>Yes, you can edit your trip preferences anytime before the destination is revealed.</p>
+                            </div>
+                            <div class="faq-item">
+                                <h4>How are destinations matched?</h4>
+                                <p>We use your travel style, budget, and dietary preferences to find the perfect match for your adventure.</p>
+                            </div>
+                        </div>
+                        
+                        <div class="profile-item accordion-item" id="contactBtn">
+                            <div class="profile-item-left">
+                                <i data-lucide="mail" class="profile-item-icon"></i>
+                                <div class="profile-item-content">Contact Us</div>
+                            </div>
+                            <i data-lucide="chevron-down"></i>
+                        </div>
+                        <div class="contact-content">
+                            <div class="contact-info">
+                                <div class="contact-item">
+                                    <i data-lucide="mail" class="contact-icon"></i>
+                                    <span>support@wejhati.com</span>
+                                </div>
+                                <div class="contact-item">
+                                    <i data-lucide="instagram" class="contact-icon"></i>
+                                    <a href="https://www.instagram.com/wejhati.app" target="_blank">@wejhati.app</a>
+                                </div>
+                                <div class="contact-item">
+                                    <i data-lucide="clock" class="contact-icon"></i>
+                                    <span>Response time: Within 24 hours</span>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="profile-item accordion-item" id="aboutBtn">
+                            <div class="profile-item-left">
+                                <i data-lucide="info" class="profile-item-icon"></i>
+                                <div class="profile-item-content">About Wejhati</div>
+                            </div>
+                            <i data-lucide="chevron-down"></i>
+                        </div>
+                        <div class="about-content">
+                            <p>Wejhati (وجهتي) means "My Destination" in Arabic. We're dedicated to creating unique travel experiences that combine the thrill of surprise with thoughtfully planned journeys tailored to your preferences.</p>
+                            <div class="version-info">Version 1.0.0</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <button id="logoutBtn" class="logout-button">
+                    <i data-lucide="log-out" class="logout-icon"></i>
+                    <span>Logout</span>
+                </button>
+            </div>
+            
+            <!-- Navigation Bar -->
+            <div class="nav-bar">
+                <a href="#" class="nav-item active" data-page="home">
+                    <i data-lucide="home" class="nav-icon"></i>
+                    <span>Home</span>
+                </a>
+                <a href="#" class="nav-item" data-page="trips">
+                    <i data-lucide="luggage" class="nav-icon"></i>
+                    <span>Trips</span>
+                </a>
+                <a href="#" class="nav-item" data-page="profile">
+                    <i data-lucide="user" class="nav-icon"></i>
+                    <span>Profile</span>
+                </a>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Toast Container -->
+    <div id="toastContainer" class="toast-container"></div>
+    
+    <!-- Loading Overlay -->
+    <div id="loadingOverlay" class="loading-overlay" style="display: none;">
+        <div class="loading-spinner"></div>
+        <div class="loading-text">Loading...</div>
+    </div>
+
+    <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
+    <script src="script.js"></script>
+    <script>
+        // Register service worker for PWA
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('/service-worker.js')
+                    .then(registration => {
+                        console.log('ServiceWorker registered: ', registration);
+                    })
+                    .catch(error => {
+                        console.log('ServiceWorker registration failed: ', error);
+                    });
+            });
+        }
+    </script>
+</body>
+</html>
